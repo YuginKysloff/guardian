@@ -111,6 +111,12 @@ $this->allow('edit-articles');
 $this->allow('edit', App\Post::class);
 $this->allow('edit', App\Post::class, 'post_id_here');
 
+// If you allow a permission on a global one.
+$this->allow('edit', App\Post::class);
+
+// When you will check against any id of the class, you will get true.
+$this->can('edit', App\Post::class, 'post_id_here'); // true
+
 // Disallow a permission. This will delete the permission.
 // Use prohibit() to keep it but to not delete it.
 // If the user does not have an active record of the permission, it will return false.
