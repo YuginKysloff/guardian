@@ -101,4 +101,19 @@ class ModelSpecificTest extends TestCase {
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, 0));
     }
 
+    public function testGlobalToSpecific()
+    {
+        $this->user->allow('edit', $this->targetInstance);
+
+        $this->assertEquals($this->user->permissions()->count(), 1);
+        $this->assertfalse($this->user->hasPermission('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->hasPermission('edit', $this->targetInstance));
+        $this->assertEquals($this->user->allowedPermissions()->count(), 1);
+        $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
+        $this->assertTrue($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->can('edit', $this->targetInstance));
+        $this->assertFalse($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertFalse($this->user->cannot('edit', $this->targetInstance));
+    }
+
 }
