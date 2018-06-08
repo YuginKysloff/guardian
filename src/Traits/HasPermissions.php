@@ -40,14 +40,20 @@ trait HasPermissions {
     public function can($permission, $target_type = null, $target_id = null)
     {
         if(!$this->hasPermission($permission, $target_type, $target_id))
+        {
+            if($this->hasPermission($permission, $target_type))
+            {
+                $permission = $this->getPermission($permission, $target_type);
+
+                return (bool) !$this->is_prohibited;
+            }
+
             return false;
+        }
 
         $permission = $this->getPermission($permission, $target_type, $target_id);
 
-        if($permission->is_prohibited)
-            return false;
-
-        return true;
+        return !$permission->is_prohibited;
     }
 
     public function cannot($permission, $target_type = null, $target_id = null)
