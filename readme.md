@@ -119,7 +119,7 @@ $this->can('edit', App\Post::class, 'post_id_here'); // true
 
 // Disallow a permission. This will delete the permission.
 // Use prohibit() to keep it but to not delete it.
-// If the user does not have an active record of the permission, it will return false.
+// If the user does not have an active record of the permission, it will create the permission with is_prohibited to 1 and return it.
 $this->disallow('edit-articles');
 $this->disallow('edit', App\Post::class);
 $this->disallow('edit', App\Post::class, 'post_id_here');
@@ -130,7 +130,7 @@ $this->deletePermission('edit', App\Post::class);
 $this->deletePermission('edit', App\Post::class, 'post_id_here');
 
 // Use prohibit/unprohibit to keep it but not delete the record.
-// Note: If the user does not have an active record of the permission, it will return false.
+// Note: If the user does not have an active record of the permission, it will create one with is_prohibited to 1 and reurn it.
 $this->prohibit('edit-articles');
 $this->prohibit('edit', App\Post::class);
 $this->prohibit('edit', App\Post::class, 'post_id_here');

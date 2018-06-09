@@ -50,7 +50,7 @@ trait HasPermissions {
 
             return false;
         }
-
+        
         $permission = $this->getPermission($permission, $target_type, $target_id);
 
         return !$permission->is_prohibited;
@@ -84,7 +84,11 @@ trait HasPermissions {
     public function disallow($permission, $target_type = null, $target_id = null, $prohibitInsteadOfDelete = false)
     {
         if(!$this->hasPermission($permission, $target_type, $target_id))
-            return false;
+        {
+            $this->allow($permission, $target_type, $target_id);
+
+            return $this->prohibit($permission, $target_type, $target_id);
+        }
 
         if($prohibitInsteadOfDelete)
             return $this->prohibit($permission, $target_type, $target_id);
@@ -100,7 +104,11 @@ trait HasPermissions {
     public function prohibit($permission, $target_type = null, $target_id = null)
     {
         if(!$this->hasPermission($permission, $target_type, $target_id))
-            return false;
+        {
+            $this->allow($permission, $target_type, $target_id);
+
+            return $this->prohibit($permission, $target_type, $target_id);
+        }
 
         return $this->getPermission($permission, $target_type, $target_id)->update([
             'is_prohibited' => true,
@@ -110,7 +118,7 @@ trait HasPermissions {
     public function unprohibit($permission, $target_type = null, $target_id = null)
     {
         if(!$this->hasPermission($permission, $target_type, $target_id))
-            return false;
+            return $this->allow($permission, $target_type, $target_id);
 
         return $this->getPermission($permission, $target_type, $target_id)->update([
             'is_prohibited' => false,
