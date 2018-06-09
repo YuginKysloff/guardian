@@ -116,4 +116,61 @@ class ModelSpecificTest extends TestCase {
         $this->assertFalse($this->user->cannot('edit', $this->targetInstance));
     }
 
+    public function disallowWithoutPermissionExistent()
+    {
+        $this->assertEquals($this->user->permissions()->count(), 0);
+        $this->assertFalse($this->user->hasPermission('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertEquals($this->user->allowedPermissions()->count(), 0);
+        $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
+        $this->assertFalse($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+
+        $this->user->disallow('edit', $this->targetInstance, $this->targetInstanceId);
+
+        $this->assertEquals($this->user->permissions()->count(), 1);
+        $this->assertTrue($this->user->hasPermission('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertEquals($this->user->allowedPermissions()->count(), 0);
+        $this->assertEquals($this->user->prohibitedPermissions()->count(), 1);
+        $this->assertFalse($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+
+        $this->user->allow('edit', $this->targetInstance, $this->targetInstanceId);
+
+        $this->assertEquals($this->user->permissions()->count(), 1);
+        $this->assertTrue($this->user->hasPermission('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertEquals($this->user->allowedPermissions()->count(), 1);
+        $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
+        $this->assertTrue($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertFalse($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+    }
+
+    public function prohibitWithoutPermissionExistent()
+    {
+        $this->assertEquals($this->user->permissions()->count(), 0);
+        $this->assertFalse($this->user->hasPermission('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertEquals($this->user->allowedPermissions()->count(), 0);
+        $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
+        $this->assertFalse($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+
+        $this->user->prohibit('edit', $this->targetInstance, $this->targetInstanceId);
+
+        $this->assertEquals($this->user->permissions()->count(), 1);
+        $this->assertTrue($this->user->hasPermission('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertEquals($this->user->allowedPermissions()->count(), 0);
+        $this->assertEquals($this->user->prohibitedPermissions()->count(), 1);
+        $this->assertFalse($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+
+        $this->user->unprohibit('edit', $this->targetInstance, $this->targetInstanceId);
+
+        $this->assertEquals($this->user->permissions()->count(), 1);
+        $this->assertTrue($this->user->hasPermission('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertEquals($this->user->allowedPermissions()->count(), 1);
+        $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
+        $this->assertTrue($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertFalse($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+    }
+
+
 }
