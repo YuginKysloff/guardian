@@ -137,5 +137,46 @@ $this->prohibit('edit', App\Post::class, 'post_id_here');
 $this->unprohibit('edit-articles');
 $this->unprohibit('edit', App\Post::class);
 $this->unprohibit('edit', App\Post::class, 'post_id_here');
-
 ```
+
+# Middleware
+You can use the methods within the model as-is, or you can use a middleware.
+
+For this, you should add the middleware to your `$routeMiddleware` array from `app\Http\Kernel.php`
+
+```php
+'guardian' => \Rennokki\Guardian\Middleware\CheckPermission::class,
+```
+
+After this, you can use it in your routes to filter the bad bugs :)
+
+You can use it with simple permissions:
+```php
+Route::get('/admin', 'AdminController@ControlPanel')->middleware('guardian:access-admin-panel');
+```
+
+Or you can use it for a global model:
+
+```php
+Route::post('/admin/products', 'AdminController@CreateProduct')->middleware('guardian:create,App\Product');
+```
+
+This middleware accepts a third parameter, so this works even with Global Specific permissions.
+
+This is a little bit complicated, because it involves the **route placeholder** instead of the **model id**.
+
+Let's use an example for this:
+
+```php
+Route::patch('/admin/{post_id}', 'AdminController@EditPost')->middleware('guardian:edit,App\Post,post_id');
+```
+
+The third parameter is the placeholder name, in the request route, where the ID of the model will be placed.
+
+For all three types of routes, exceptions will be thrown if there are not enough permissions:
+
+For the simple & global types (the frist two), a `Rennokki\Guardian\Exceptions\PermissionException` will be thrown.
+
+For the last one, a `Rennokki\Guardian\Exceptions\RouteException` is thrown.
+
+You can access `permission()`, `modelType()` and `modelIdPlaceholder()` methods within the exception to handle your exception.
