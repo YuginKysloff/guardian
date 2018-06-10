@@ -2,11 +2,11 @@
 
 namespace Rennokki\Guardian\Test\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use Rennokki\Guardian\Traits\HasPermissions;
 
-class User extends Model
+class User extends Authenticatable
 {
     use HasPermissions;
 
