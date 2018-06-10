@@ -3,6 +3,7 @@
 namespace Rennokki\Guardian\Test;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 
 use Rennokki\Guardian\Middleware\CheckPermission;
 
@@ -10,6 +11,7 @@ use Rennokki\Guardian\Test\Models\User;
 use Rennokki\Guardian\Test\Models\Post;
 
 use Rennokki\Guardian\Exceptions\PermissionException;
+use Rennokki\Guardian\Exceptions\RouteException;
 
 class MiddlewareTest extends TestCase {
 
@@ -122,12 +124,15 @@ class MiddlewareTest extends TestCase {
         $this->assertTrue($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertFalse($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
 
-        $request = Request::create('/', 'GET');
+        $request = Request::create('/edit/'.$this->targetInstanceId, 'PATCH');
         $middleware = new CheckPermission;
         $request->setUserResolver(function() {
             return $this->user;
         });
-        $response = $middleware->handle($request, function() {}, 'edit', $this->targetInstance, $this->targetInstanceId);
+        $request->setRouteResolver(function () use ($request) {
+            return (new Route('GET', '/edit/{post_id}', []))->bind($request);
+        });
+        $response = $middleware->handle($request, function() {}, 'edit', $this->targetInstance, 'post_id');
 
         $this->assertEquals($response, null);
 
@@ -140,15 +145,48 @@ class MiddlewareTest extends TestCase {
         $this->assertFalse($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
 
-        $request = Request::create('/', 'GET');
+        $request = Request::create('/edit/'.$this->targetInstanceId, 'PATCH');
         $middleware = new CheckPermission;
         $request->setUserResolver(function() {
             return $this->user;
         });
+        $request->setRouteResolver(function () use ($request) {
+            return (new Route('GET', '/edit/{post_id}', []))->bind($request);
+        });
 
         try {
-            $response = $middleware->handle($request, function() {}, 'edit', $this->targetInstance, $this->targetInstanceId);
+            $response = $middleware->handle($request, function() {}, 'edit', $this->targetInstance, 'post_id');
+        } catch(RouteException $e) {
+            $this->assertTrue(true);
         } catch(PermissionException $e) {
+            $this->assertTrue(true);
+        }
+    }
+
+    public function testGlobalSpecificPermissionMiddlewareWithWrongPlaceholder()
+    {
+        $this->user->allow('edit', $this->targetInstance, $this->targetInstanceId);
+        $this->actingAs($this->user);
+
+        $this->assertEquals($this->user->permissions()->count(), 1);
+        $this->assertTrue($this->user->hasPermission('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertEquals($this->user->allowedPermissions()->count(), 1);
+        $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
+        $this->assertTrue($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertFalse($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+
+        $request = Request::create('/edit/'.$this->targetInstanceId, 'PATCH');
+        $middleware = new CheckPermission;
+        $request->setUserResolver(function() {
+            return $this->user;
+        });
+        $request->setRouteResolver(function () use ($request) {
+            return (new Route('GET', '/edit/{post_id}', []))->bind($request);
+        });
+
+        try {
+            $response = $middleware->handle($request, function() {}, 'edit', $this->targetInstance, 'not_a_post_id');
+        } catch(RouteException $e) {
             $this->assertTrue(true);
         }
     }
