@@ -9,23 +9,23 @@ class PermissionException extends AuthorizationException
 
     protected $permission;
     protected $model_type;
-    protected $model_id;
+    protected $model_id_placeholder;
 
-    public function __construct($permission, $model_type = null, $model_id = null)
+    public function __construct($permission, $model_type = null, $model_id_placeholder = null)
     {
         $message = 'Not enough permissions.';
 
-        if($model_type && !$model_id)
+        if($model_type && !$model_id_placeholder)
             $message = 'Not enough permissions on '.$model_type;
 
-        if($model_type && $model_id)
-            $message = 'Not enough permissions on '.$model_type.' with ID '.$model_id;
+        if($model_type && $model_id_placeholder)
+            $message = 'Not enough permissions on '.$model_type.' with ID passed in '.$model_id_placeholder;
 
         parent::__construct($message);
 
         $this->permission = $permission;
         $this->model_type = $model_type;
-        $this->model_id = $model_id;
+        $this->model_id_placeholder = $model_id_placeholder;
     }
 
     public function permission()
@@ -33,9 +33,9 @@ class PermissionException extends AuthorizationException
         return $this->permission;
     }
 
-    public function modelId()
+    public function modelIdPlaceholder()
     {
-        return $this->model_id;
+        return $this->model_id_placeholder;
     }
 
     public function modelType()
