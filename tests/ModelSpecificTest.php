@@ -29,6 +29,7 @@ class ModelSpecificTest extends TestCase {
 
         $this->assertFalse($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
     }
 
     public function testAllowanceAndDisallowance()
@@ -42,6 +43,8 @@ class ModelSpecificTest extends TestCase {
         $this->assertTrue($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertFalse($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, 0));
+        $this->assertFalse($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, 0));
 
         $this->user->disallow('edit', $this->targetInstance, $this->targetInstanceId, true); // prohibit instead of delete
 
@@ -52,6 +55,8 @@ class ModelSpecificTest extends TestCase {
         $this->assertFalse($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, 0));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, 0));
 
         $this->user->allow('edit', $this->targetInstance, $this->targetInstanceId);
         $this->user->disallow('edit', $this->targetInstance, $this->targetInstanceId); // delete
@@ -63,6 +68,21 @@ class ModelSpecificTest extends TestCase {
         $this->assertFalse($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, 0));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, 0));
+
+        $this->user->disallow('edit', $this->targetInstance, $this->targetInstanceId);
+        
+        $this->assertEquals($this->user->permissions()->count(), 1);
+        $this->assertTrue($this->user->hasPermission('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertEquals($this->user->allowedPermissions()->count(), 0);
+        $this->assertEquals($this->user->prohibitedPermissions()->count(), 1);
+        $this->assertFalse($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cannot('edit', $this->targetInstance, 0));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, 0));
+
     }
 
     public function testProhibition()
@@ -78,6 +98,8 @@ class ModelSpecificTest extends TestCase {
         $this->assertFalse($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, 0));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, 0));
 
         $this->user->unprohibit('edit', $this->targetInstance, $this->targetInstanceId);
 
@@ -88,6 +110,8 @@ class ModelSpecificTest extends TestCase {
         $this->assertTrue($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertFalse($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, 0));
+        $this->assertFalse($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, 0));
 
         $this->user->prohibit('edit', $this->targetInstance, $this->targetInstanceId);
         $this->user->allow('edit', $this->targetInstance, $this->targetInstanceId);
@@ -99,6 +123,8 @@ class ModelSpecificTest extends TestCase {
         $this->assertTrue($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertFalse($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, 0));
+        $this->assertFalse($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, 0));
     }
 
     public function testGlobalToSpecific()
@@ -114,6 +140,8 @@ class ModelSpecificTest extends TestCase {
         $this->assertTrue($this->user->can('edit', $this->targetInstance));
         $this->assertFalse($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertFalse($this->user->cannot('edit', $this->targetInstance));
+        $this->assertFalse($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertFalse($this->user->cant('edit', $this->targetInstance));
     }
 
     public function disallowWithoutPermissionExistent()
@@ -124,6 +152,7 @@ class ModelSpecificTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
         $this->assertFalse($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
 
         $this->user->disallow('edit', $this->targetInstance, $this->targetInstanceId);
 
@@ -133,6 +162,7 @@ class ModelSpecificTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 1);
         $this->assertFalse($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
 
         $this->user->allow('edit', $this->targetInstance, $this->targetInstanceId);
 
@@ -142,6 +172,7 @@ class ModelSpecificTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
         $this->assertTrue($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertFalse($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertFalse($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
     }
 
     public function prohibitWithoutPermissionExistent()
@@ -152,6 +183,7 @@ class ModelSpecificTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
         $this->assertFalse($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
 
         $this->user->prohibit('edit', $this->targetInstance, $this->targetInstanceId);
 
@@ -161,6 +193,7 @@ class ModelSpecificTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 1);
         $this->assertFalse($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertTrue($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
 
         $this->user->unprohibit('edit', $this->targetInstance, $this->targetInstanceId);
 
@@ -170,6 +203,7 @@ class ModelSpecificTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
         $this->assertTrue($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertFalse($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertFalse($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
     }
 
 
