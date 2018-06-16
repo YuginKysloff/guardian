@@ -193,7 +193,7 @@ class MiddlewareTest extends TestCase {
             $this->assertEquals($e->modelType(), $this->targetInstance);
         } catch(PermissionException $e) {
             $this->assertEquals($e->permission(), 'edit');
-            $this->assertEquals($e->modelIdPlaceholder(), $this->targetInstanceId);
+            $this->assertEquals($e->modelIdPlaceholder(), 'post_id');
             $this->assertEquals($e->modelType(), $this->targetInstance);
         }
     }
@@ -221,7 +221,7 @@ class MiddlewareTest extends TestCase {
             $response = $middleware->handle($request, function() {}, 'edit', $this->targetInstance, 'not_a_post_id');
         } catch(PermissionException $e) {
             $this->assertEquals($e->permission(), 'edit');
-            $this->assertEquals($e->modelIdPlaceholder(), null);
+            $this->assertEquals($e->modelIdPlaceholder(), 'not_a_post_id');
             $this->assertEquals($e->modelType(), $this->targetInstance);
         }
 
