@@ -40,6 +40,13 @@ class MiddlewareTest extends TestCase {
 
         $request = Request::create('/', 'GET');
         $middleware = new CheckPermission;
+        
+        try {
+            $response = $middleware->handle($request, function() {}, 'accessTheLab');
+        } catch(PermissionException $e) {
+            $this->assertTrue(true);
+        }
+
         $request->setUserResolver(function() {
             return $this->user;
         });
@@ -58,6 +65,13 @@ class MiddlewareTest extends TestCase {
 
         $request = Request::create('/', 'GET');
         $middleware = new CheckPermission;
+
+        try {
+            $response = $middleware->handle($request, function() {}, 'accessTheLab');
+        } catch(PermissionException $e) {
+            $this->assertTrue(true);
+        }
+
         $request->setUserResolver(function() {
             return $this->user;
         });
@@ -101,6 +115,13 @@ class MiddlewareTest extends TestCase {
 
         $request = Request::create('/', 'GET');
         $middleware = new CheckPermission;
+
+        try {
+            $response = $middleware->handle($request, function() {}, 'edit', $this->targetInstance);
+        } catch(PermissionException $e) {
+            $this->assertTrue(true);
+        }
+
         $request->setUserResolver(function() {
             return $this->user;
         });
@@ -177,11 +198,19 @@ class MiddlewareTest extends TestCase {
 
         $request = Request::create('/edit/'.$this->targetInstanceId, 'PATCH');
         $middleware = new CheckPermission;
-        $request->setUserResolver(function() {
-            return $this->user;
-        });
+
         $request->setRouteResolver(function () use ($request) {
             return (new Route('GET', '/edit/{post_id}', []))->bind($request);
+        });
+
+        try {
+            $response = $middleware->handle($request, function() {}, 'edit', $this->targetInstance, 'not_a_post_id');
+        } catch(PermissionException $e) {
+            $this->assertTrue(true);
+        }
+
+        $request->setUserResolver(function() {
+            return $this->user;
         });
 
         try {

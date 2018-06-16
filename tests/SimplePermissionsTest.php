@@ -26,6 +26,7 @@ class SimplePermissionsTest extends TestCase {
 
         $this->assertFalse($this->user->can('accessTheLab'));
         $this->assertTrue($this->user->cannot('accessTheLab'));
+        $this->assertTrue($this->user->cant('accessTheLab'));
     }
 
     public function testAllowanceAndDisallowance()
@@ -38,6 +39,7 @@ class SimplePermissionsTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
         $this->assertTrue($this->user->can('accessTheLab'));
         $this->assertFalse($this->user->cannot('accessTheLab'));
+        $this->assertFalse($this->user->cant('accessTheLab'));
 
         $this->user->disallow('accessTheLab', null, null, true); // prohibit instead of delete
 
@@ -47,6 +49,7 @@ class SimplePermissionsTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 1);
         $this->assertFalse($this->user->can('accessTheLab'));
         $this->assertTrue($this->user->cannot('accessTheLab'));
+        $this->assertTrue($this->user->cant('accessTheLab'));
 
         $this->user->allow('accessTheLab');
         $this->user->disallow('accessTheLab'); // delete
@@ -57,6 +60,18 @@ class SimplePermissionsTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
         $this->assertFalse($this->user->can('accessTheLab'));
         $this->assertTrue($this->user->cannot('accessTheLab'));
+        $this->assertTrue($this->user->cant('accessTheLab'));
+
+        $this->user->disallow('accessTheLab');
+
+        $this->assertEquals($this->user->permissions()->count(), 1);
+        $this->assertTrue($this->user->hasPermission('accessTheLab'));
+        $this->assertEquals($this->user->allowedPermissions()->count(), 0);
+        $this->assertEquals($this->user->prohibitedPermissions()->count(), 1);
+        $this->assertFalse($this->user->can('accessTheLab'));
+        $this->assertTrue($this->user->cannot('accessTheLab'));
+        $this->assertTrue($this->user->cant('accessTheLab'));
+
     }
 
     public function testProhibition()
@@ -71,6 +86,7 @@ class SimplePermissionsTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 1);
         $this->assertFalse($this->user->can('accessTheLab'));
         $this->assertTrue($this->user->cannot('accessTheLab'));
+        $this->assertTrue($this->user->cant('accessTheLab'));
 
         $this->user->unprohibit('accessTheLab');
 
@@ -80,6 +96,7 @@ class SimplePermissionsTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
         $this->assertTrue($this->user->can('accessTheLab'));
         $this->assertFalse($this->user->cannot('accessTheLab'));
+        $this->assertFalse($this->user->cant('accessTheLab'));
 
         $this->user->prohibit('accessTheLab');
         $this->user->allow('accessTheLab');
@@ -90,6 +107,7 @@ class SimplePermissionsTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
         $this->assertTrue($this->user->can('accessTheLab'));
         $this->assertFalse($this->user->cannot('accessTheLab'));
+        $this->assertFalse($this->user->cant('accessTheLab'));
     }
 
     public function disallowWithoutPermissionExistent()
@@ -100,6 +118,7 @@ class SimplePermissionsTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
         $this->assertFalse($this->user->can('accessTheLab'));
         $this->assertTrue($this->user->cannot('accessTheLab'));
+        $this->assertTrue($this->user->cant('accessTheLab'));
 
         $this->user->disallow('accessTheLab');
 
@@ -109,6 +128,7 @@ class SimplePermissionsTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 1);
         $this->assertFalse($this->user->can('accessTheLab'));
         $this->assertTrue($this->user->cannot('accessTheLab'));
+        $this->assertTrue($this->user->cant('accessTheLab'));
 
         $this->user->allow('accessTheLab');
 
@@ -118,6 +138,7 @@ class SimplePermissionsTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
         $this->assertTrue($this->user->can('accessTheLab'));
         $this->assertFalse($this->user->cannot('accessTheLab'));
+        $this->assertFalse($this->user->cant('accessTheLab'));
     }
 
     public function prohibitWithoutPermissionExistent()
@@ -128,6 +149,7 @@ class SimplePermissionsTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
         $this->assertFalse($this->user->can('accessTheLab'));
         $this->assertTrue($this->user->cannot('accessTheLab'));
+        $this->assertTrue($this->user->cant('accessTheLab'));
 
         $this->user->prohibit('accessTheLab');
 
@@ -137,6 +159,7 @@ class SimplePermissionsTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 1);
         $this->assertFalse($this->user->can('accessTheLab'));
         $this->assertTrue($this->user->cannot('accessTheLab'));
+        $this->assertTrue($this->user->cant('accessTheLab'));
 
         $this->user->unprohibit('accessTheLab');
 
@@ -146,6 +169,7 @@ class SimplePermissionsTest extends TestCase {
         $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
         $this->assertTrue($this->user->can('accessTheLab'));
         $this->assertFalse($this->user->cannot('accessTheLab'));
+        $this->assertFalse($this->user->cant('accessTheLab'));
     }
 
 }
