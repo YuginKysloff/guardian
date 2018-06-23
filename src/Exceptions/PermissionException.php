@@ -15,10 +15,10 @@ class PermissionException extends AuthorizationException
     {
         $message = 'Not enough permissions.';
 
-        if($model_type && !$model_id_placeholder)
+        if ($model_type && !$model_id_placeholder)
             $message = 'Not enough permissions on '.$model_type;
 
-        if($model_type && $model_id_placeholder)
+        if ($model_type && $model_id_placeholder)
             $message = 'Not enough permissions on '.$model_type.' with ID passed in '.$model_id_placeholder;
 
         parent::__construct($message);
