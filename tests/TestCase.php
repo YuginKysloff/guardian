@@ -2,10 +2,10 @@
 
 namespace Rennokki\Guardian\Test;
 
-use Orchestra\Testbench\TestCase as Orchestra;
-use Rennokki\Guardian\Models\PermissionModel;
 use Rennokki\Guardian\Test\Models\Post;
 use Rennokki\Guardian\Test\Models\User;
+use Rennokki\Guardian\Models\PermissionModel;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
 {

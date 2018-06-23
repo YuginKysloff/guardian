@@ -39,11 +39,11 @@ trait HasPermissions
 
     public function can($permission, $target_type = null, $target_id = null)
     {
-        if (!$this->hasPermission($permission, $target_type, $target_id)) {
+        if (! $this->hasPermission($permission, $target_type, $target_id)) {
             if ($this->hasPermission($permission, $target_type)) {
                 $permission = $this->getPermission($permission, $target_type);
 
-                return (bool) !$this->is_prohibited;
+                return (bool) ! $this->is_prohibited;
             }
 
             return false;
@@ -51,12 +51,12 @@ trait HasPermissions
 
         $permission = $this->getPermission($permission, $target_type, $target_id);
 
-        return !$permission->is_prohibited;
+        return ! $permission->is_prohibited;
     }
 
     public function cannot($permission, $target_type = null, $target_id = null)
     {
-        return (bool) !$this->can($permission, $target_type, $target_id);
+        return (bool) ! $this->can($permission, $target_type, $target_id);
     }
 
     public function cant($permission, $target_type = null, $target_id = null)
@@ -82,7 +82,7 @@ trait HasPermissions
 
     public function disallow($permission, $target_type = null, $target_id = null, $prohibitInsteadOfDelete = false)
     {
-        if (!$this->hasPermission($permission, $target_type, $target_id)) {
+        if (! $this->hasPermission($permission, $target_type, $target_id)) {
             $this->allow($permission, $target_type, $target_id);
 
             return $this->prohibit($permission, $target_type, $target_id);
@@ -102,7 +102,7 @@ trait HasPermissions
 
     public function prohibit($permission, $target_type = null, $target_id = null)
     {
-        if (!$this->hasPermission($permission, $target_type, $target_id)) {
+        if (! $this->hasPermission($permission, $target_type, $target_id)) {
             $this->allow($permission, $target_type, $target_id);
 
             return $this->prohibit($permission, $target_type, $target_id);
@@ -115,7 +115,7 @@ trait HasPermissions
 
     public function unprohibit($permission, $target_type = null, $target_id = null)
     {
-        if (!$this->hasPermission($permission, $target_type, $target_id)) {
+        if (! $this->hasPermission($permission, $target_type, $target_id)) {
             return $this->allow($permission, $target_type, $target_id);
         }
 

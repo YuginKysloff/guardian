@@ -4,10 +4,10 @@ namespace Rennokki\Guardian\Test;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-use Rennokki\Guardian\Exceptions\PermissionException;
+use Rennokki\Guardian\Test\Models\Post;
 use Rennokki\Guardian\Exceptions\RouteException;
 use Rennokki\Guardian\Middleware\CheckPermission;
-use Rennokki\Guardian\Test\Models\Post;
+use Rennokki\Guardian\Exceptions\PermissionException;
 
 class MiddlewareTest extends TestCase
 {
