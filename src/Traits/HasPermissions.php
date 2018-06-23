@@ -68,8 +68,9 @@ trait HasPermissions {
 
     public function allow($permission, $target_type = null, $target_id = null)
     {
-        if ($this->hasPermission($permission, $target_type, $target_id))
-            return $this->unprohibit($permission, $target_type, $target_id);
+        if ($this->hasPermission($permission, $target_type, $target_id)) {
+                    return $this->unprohibit($permission, $target_type, $target_id);
+        }
 
         $model = config('guardian.model');
 
@@ -90,8 +91,9 @@ trait HasPermissions {
             return $this->prohibit($permission, $target_type, $target_id);
         }
 
-        if ($prohibitInsteadOfDelete)
-            return $this->prohibit($permission, $target_type, $target_id);
+        if ($prohibitInsteadOfDelete) {
+                    return $this->prohibit($permission, $target_type, $target_id);
+        }
 
         return (bool) $this->permissions()->where('permission_name', $permission)->delete();
     }
@@ -117,8 +119,9 @@ trait HasPermissions {
 
     public function unprohibit($permission, $target_type = null, $target_id = null)
     {
-        if (!$this->hasPermission($permission, $target_type, $target_id))
-            return $this->allow($permission, $target_type, $target_id);
+        if (!$this->hasPermission($permission, $target_type, $target_id)) {
+                    return $this->allow($permission, $target_type, $target_id);
+        }
 
         return $this->getPermission($permission, $target_type, $target_id)->update([
             'is_prohibited' => false,
