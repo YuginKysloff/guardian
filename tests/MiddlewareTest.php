@@ -4,17 +4,13 @@ namespace Rennokki\Guardian\Test;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-
-use Rennokki\Guardian\Middleware\CheckPermission;
-
-use Rennokki\Guardian\Test\Models\User;
-use Rennokki\Guardian\Test\Models\Post;
-
 use Rennokki\Guardian\Exceptions\PermissionException;
 use Rennokki\Guardian\Exceptions\RouteException;
+use Rennokki\Guardian\Middleware\CheckPermission;
+use Rennokki\Guardian\Test\Models\Post;
 
-class MiddlewareTest extends TestCase {
-
+class MiddlewareTest extends TestCase
+{
     protected $user;
     protected $targetInstance = Post::class;
     protected $targetInstanceId = 777;
@@ -27,7 +23,7 @@ class MiddlewareTest extends TestCase {
     }
 
     public function testSimplePermissionMiddleware()
-    {   
+    {
         $this->user->allow('accessTheLab');
         $this->actingAs($this->user);
 
@@ -39,20 +35,22 @@ class MiddlewareTest extends TestCase {
         $this->assertFalse($this->user->cannot('accessTheLab'));
 
         $request = Request::create('/', 'GET');
-        $middleware = new CheckPermission;
-        
+        $middleware = new CheckPermission();
+
         try {
-            $response = $middleware->handle($request, function() {}, 'accessTheLab');
-        } catch(PermissionException $e) {
+            $response = $middleware->handle($request, function () {
+            }, 'accessTheLab');
+        } catch (PermissionException $e) {
             $this->assertEquals($e->permission(), 'accessTheLab');
             $this->assertEquals($e->modelIdPlaceholder(), null);
             $this->assertEquals($e->modelType(), null);
         }
 
-        $request->setUserResolver(function() {
+        $request->setUserResolver(function () {
             return $this->user;
         });
-        $response = $middleware->handle($request, function() {}, 'accessTheLab');
+        $response = $middleware->handle($request, function () {
+        }, 'accessTheLab');
 
         $this->assertEquals($response, null);
 
@@ -66,23 +64,25 @@ class MiddlewareTest extends TestCase {
         $this->assertTrue($this->user->cannot('accessTheLab'));
 
         $request = Request::create('/', 'GET');
-        $middleware = new CheckPermission;
+        $middleware = new CheckPermission();
 
         try {
-            $response = $middleware->handle($request, function() {}, 'accessTheLab');
-        } catch(PermissionException $e) {
+            $response = $middleware->handle($request, function () {
+            }, 'accessTheLab');
+        } catch (PermissionException $e) {
             $this->assertEquals($e->permission(), 'accessTheLab');
             $this->assertEquals($e->modelIdPlaceholder(), null);
             $this->assertEquals($e->modelType(), null);
         }
 
-        $request->setUserResolver(function() {
+        $request->setUserResolver(function () {
             return $this->user;
         });
 
         try {
-            $response = $middleware->handle($request, function() {}, 'accessTheLab');
-        } catch(PermissionException $e) {
+            $response = $middleware->handle($request, function () {
+            }, 'accessTheLab');
+        } catch (PermissionException $e) {
             $this->assertEquals($e->permission(), 'accessTheLab');
             $this->assertEquals($e->modelIdPlaceholder(), null);
             $this->assertEquals($e->modelType(), null);
@@ -90,7 +90,7 @@ class MiddlewareTest extends TestCase {
     }
 
     public function testGlobalPermissionMiddleware()
-    {   
+    {
         $this->user->allow('edit', $this->targetInstance);
         $this->actingAs($this->user);
 
@@ -102,11 +102,12 @@ class MiddlewareTest extends TestCase {
         $this->assertFalse($this->user->cannot('edit', $this->targetInstance));
 
         $request = Request::create('/', 'GET');
-        $middleware = new CheckPermission;
-        $request->setUserResolver(function() {
+        $middleware = new CheckPermission();
+        $request->setUserResolver(function () {
             return $this->user;
         });
-        $response = $middleware->handle($request, function() {}, 'edit', $this->targetInstance);
+        $response = $middleware->handle($request, function () {
+        }, 'edit', $this->targetInstance);
 
         $this->assertEquals($response, null);
 
@@ -120,23 +121,25 @@ class MiddlewareTest extends TestCase {
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance));
 
         $request = Request::create('/', 'GET');
-        $middleware = new CheckPermission;
+        $middleware = new CheckPermission();
 
         try {
-            $response = $middleware->handle($request, function() {}, 'edit', $this->targetInstance);
-        } catch(PermissionException $e) {
+            $response = $middleware->handle($request, function () {
+            }, 'edit', $this->targetInstance);
+        } catch (PermissionException $e) {
             $this->assertEquals($e->permission(), 'edit');
             $this->assertEquals($e->modelIdPlaceholder(), null);
             $this->assertEquals($e->modelType(), $this->targetInstance);
         }
 
-        $request->setUserResolver(function() {
+        $request->setUserResolver(function () {
             return $this->user;
         });
 
         try {
-            $response = $middleware->handle($request, function() {}, 'edit', $this->targetInstance);
-        } catch(PermissionException $e) {
+            $response = $middleware->handle($request, function () {
+            }, 'edit', $this->targetInstance);
+        } catch (PermissionException $e) {
             $this->assertEquals($e->permission(), 'edit');
             $this->assertEquals($e->modelIdPlaceholder(), null);
             $this->assertEquals($e->modelType(), $this->targetInstance);
@@ -144,7 +147,7 @@ class MiddlewareTest extends TestCase {
     }
 
     public function testGlobalSpecificPermissionMiddleware()
-    {   
+    {
         $this->user->allow('edit', $this->targetInstance, $this->targetInstanceId);
         $this->actingAs($this->user);
 
@@ -156,14 +159,15 @@ class MiddlewareTest extends TestCase {
         $this->assertFalse($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
 
         $request = Request::create('/edit/'.$this->targetInstanceId, 'PATCH');
-        $middleware = new CheckPermission;
-        $request->setUserResolver(function() {
+        $middleware = new CheckPermission();
+        $request->setUserResolver(function () {
             return $this->user;
         });
         $request->setRouteResolver(function () use ($request) {
             return (new Route('GET', '/edit/{post_id}', []))->bind($request);
         });
-        $response = $middleware->handle($request, function() {}, 'edit', $this->targetInstance, 'post_id');
+        $response = $middleware->handle($request, function () {
+        }, 'edit', $this->targetInstance, 'post_id');
 
         $this->assertEquals($response, null);
 
@@ -177,8 +181,8 @@ class MiddlewareTest extends TestCase {
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
 
         $request = Request::create('/edit/'.$this->targetInstanceId, 'PATCH');
-        $middleware = new CheckPermission;
-        $request->setUserResolver(function() {
+        $middleware = new CheckPermission();
+        $request->setUserResolver(function () {
             return $this->user;
         });
         $request->setRouteResolver(function () use ($request) {
@@ -186,12 +190,13 @@ class MiddlewareTest extends TestCase {
         });
 
         try {
-            $response = $middleware->handle($request, function() {}, 'edit', $this->targetInstance, 'post_id');
-        } catch(RouteException $e) {
+            $response = $middleware->handle($request, function () {
+            }, 'edit', $this->targetInstance, 'post_id');
+        } catch (RouteException $e) {
             $this->assertEquals($e->permission(), 'edit');
             $this->assertEquals($e->modelIdPlaceholder(), $this->targetInstanceId);
             $this->assertEquals($e->modelType(), $this->targetInstance);
-        } catch(PermissionException $e) {
+        } catch (PermissionException $e) {
             $this->assertEquals($e->permission(), 'edit');
             $this->assertEquals($e->modelIdPlaceholder(), 'post_id');
             $this->assertEquals($e->modelType(), $this->targetInstance);
@@ -211,31 +216,32 @@ class MiddlewareTest extends TestCase {
         $this->assertFalse($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
 
         $request = Request::create('/edit/'.$this->targetInstanceId, 'PATCH');
-        $middleware = new CheckPermission;
+        $middleware = new CheckPermission();
 
         $request->setRouteResolver(function () use ($request) {
             return (new Route('GET', '/edit/{post_id}', []))->bind($request);
         });
 
         try {
-            $response = $middleware->handle($request, function() {}, 'edit', $this->targetInstance, 'not_a_post_id');
-        } catch(PermissionException $e) {
+            $response = $middleware->handle($request, function () {
+            }, 'edit', $this->targetInstance, 'not_a_post_id');
+        } catch (PermissionException $e) {
             $this->assertEquals($e->permission(), 'edit');
             $this->assertEquals($e->modelIdPlaceholder(), 'not_a_post_id');
             $this->assertEquals($e->modelType(), $this->targetInstance);
         }
 
-        $request->setUserResolver(function() {
+        $request->setUserResolver(function () {
             return $this->user;
         });
 
         try {
-            $response = $middleware->handle($request, function() {}, 'edit', $this->targetInstance, 'not_a_post_id');
-        } catch(RouteException $e) {
+            $response = $middleware->handle($request, function () {
+            }, 'edit', $this->targetInstance, 'not_a_post_id');
+        } catch (RouteException $e) {
             $this->assertEquals($e->permission(), 'edit');
             $this->assertEquals($e->modelIdPlaceholder(), 'not_a_post_id');
             $this->assertEquals($e->modelType(), $this->targetInstance);
         }
     }
-
 }

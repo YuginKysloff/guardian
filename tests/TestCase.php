@@ -3,21 +3,20 @@
 namespace Rennokki\Guardian\Test;
 
 use Orchestra\Testbench\TestCase as Orchestra;
-
-use Rennokki\Guardian\Test\Models\User;
-use Rennokki\Guardian\Test\Models\Post;
 use Rennokki\Guardian\Models\PermissionModel;
+use Rennokki\Guardian\Test\Models\Post;
+use Rennokki\Guardian\Test\Models\User;
 
 abstract class TestCase extends Orchestra
 {
     public function setUp()
     {
         parent::setUp();
-        
+
         $this->resetDatabase();
 
         $this->loadLaravelMigrations(['--database' => 'sqlite']);
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->withFactories(__DIR__.'/../database/factories');
 
         $this->artisan('migrate', ['--database' => 'sqlite']);
@@ -34,9 +33,9 @@ abstract class TestCase extends Orchestra
     {
         $app['config']->set('database.default', 'sqlite');
         $app['config']->set('database.connections.sqlite', [
-            'driver' => 'sqlite',
+            'driver'   => 'sqlite',
             'database' => __DIR__.'/database.sqlite',
-            'prefix' => '',
+            'prefix'   => '',
         ]);
         $app['config']->set('auth.providers.users.model', User::class);
         $app['config']->set('auth.providers.posts.model', Post::class);

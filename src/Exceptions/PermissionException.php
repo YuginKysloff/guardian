@@ -6,7 +6,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 
 class PermissionException extends AuthorizationException
 {
-
     protected $permission;
     protected $model_type;
     protected $model_id_placeholder;
@@ -16,11 +15,11 @@ class PermissionException extends AuthorizationException
         $message = 'Not enough permissions.';
 
         if ($model_type && !$model_id_placeholder) {
-                    $message = 'Not enough permissions on '.$model_type;
+            $message = 'Not enough permissions on '.$model_type;
         }
 
         if ($model_type && $model_id_placeholder) {
-                    $message = 'Not enough permissions on '.$model_type.' with ID passed in '.$model_id_placeholder;
+            $message = 'Not enough permissions on '.$model_type.' with ID passed in '.$model_id_placeholder;
         }
 
         parent::__construct($message);

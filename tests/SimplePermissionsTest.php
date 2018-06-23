@@ -2,10 +2,8 @@
 
 namespace Rennokki\Guardian\Test;
 
-use Rennokki\Guardian\Test\Models\User;
-
-class SimplePermissionsTest extends TestCase {
-
+class SimplePermissionsTest extends TestCase
+{
     protected $user;
 
     public function setUp()
@@ -71,7 +69,6 @@ class SimplePermissionsTest extends TestCase {
         $this->assertFalse($this->user->can('accessTheLab'));
         $this->assertTrue($this->user->cannot('accessTheLab'));
         $this->assertTrue($this->user->cant('accessTheLab'));
-
     }
 
     public function testProhibition()
@@ -171,5 +168,4 @@ class SimplePermissionsTest extends TestCase {
         $this->assertFalse($this->user->cannot('accessTheLab'));
         $this->assertFalse($this->user->cant('accessTheLab'));
     }
-
 }

@@ -2,7 +2,7 @@
 
 return [
 
-    /**
+    /*
      * The model which handles the 'permissions' table.
      */
 

@@ -2,11 +2,10 @@
 
 namespace Rennokki\Guardian\Test;
 
-use Rennokki\Guardian\Test\Models\User;
 use Rennokki\Guardian\Test\Models\Post;
 
-class ModelGlobalTest extends TestCase {
-
+class ModelGlobalTest extends TestCase
+{
     protected $user;
     protected $targetInstance = Post::class;
 
@@ -64,7 +63,7 @@ class ModelGlobalTest extends TestCase {
         $this->assertTrue($this->user->cant('edit', $this->targetInstance));
 
         $this->user->disallow('edit', $this->targetInstance);
-        
+
         $this->assertEquals($this->user->permissions()->count(), 1);
         $this->assertTrue($this->user->hasPermission('edit', $this->targetInstance));
         $this->assertEquals($this->user->allowedPermissions()->count(), 0);
@@ -171,5 +170,4 @@ class ModelGlobalTest extends TestCase {
         $this->assertFalse($this->user->cannot('edit', $this->targetInstance));
         $this->assertFalse($this->user->cant('edit', $this->targetInstance));
     }
-
 }

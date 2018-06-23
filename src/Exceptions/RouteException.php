@@ -6,7 +6,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 
 class RouteException extends AuthorizationException
 {
-
     protected $permission;
     protected $model_type;
     protected $model_id_placeholder;

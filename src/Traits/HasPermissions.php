@@ -2,8 +2,8 @@
 
 namespace Rennokki\Guardian\Traits;
 
-trait HasPermissions {
-
+trait HasPermissions
+{
     public function permissions()
     {
         return $this->morphMany(config('guardian.model'), 'model');
@@ -39,10 +39,8 @@ trait HasPermissions {
 
     public function can($permission, $target_type = null, $target_id = null)
     {
-        if (!$this->hasPermission($permission, $target_type, $target_id))
-        {
-            if ($this->hasPermission($permission, $target_type))
-            {
+        if (!$this->hasPermission($permission, $target_type, $target_id)) {
+            if ($this->hasPermission($permission, $target_type)) {
                 $permission = $this->getPermission($permission, $target_type);
 
                 return (bool) !$this->is_prohibited;
@@ -50,7 +48,7 @@ trait HasPermissions {
 
             return false;
         }
-        
+
         $permission = $this->getPermission($permission, $target_type, $target_id);
 
         return !$permission->is_prohibited;
@@ -69,30 +67,29 @@ trait HasPermissions {
     public function allow($permission, $target_type = null, $target_id = null)
     {
         if ($this->hasPermission($permission, $target_type, $target_id)) {
-                    return $this->unprohibit($permission, $target_type, $target_id);
+            return $this->unprohibit($permission, $target_type, $target_id);
         }
 
         $model = config('guardian.model');
 
         return $this->permissions()->save(new $model([
                 'permission_name' => $permission,
-                'is_prohibited' => false,
-                'target_type' => ($target_type) ?: null,
-                'target_id' => ($target_type && $target_id) ? $target_id : null,
+                'is_prohibited'   => false,
+                'target_type'     => ($target_type) ?: null,
+                'target_id'       => ($target_type && $target_id) ? $target_id : null,
             ]));
     }
 
     public function disallow($permission, $target_type = null, $target_id = null, $prohibitInsteadOfDelete = false)
     {
-        if (!$this->hasPermission($permission, $target_type, $target_id))
-        {
+        if (!$this->hasPermission($permission, $target_type, $target_id)) {
             $this->allow($permission, $target_type, $target_id);
 
             return $this->prohibit($permission, $target_type, $target_id);
         }
 
         if ($prohibitInsteadOfDelete) {
-                    return $this->prohibit($permission, $target_type, $target_id);
+            return $this->prohibit($permission, $target_type, $target_id);
         }
 
         return (bool) $this->permissions()->where('permission_name', $permission)->delete();
@@ -105,8 +102,7 @@ trait HasPermissions {
 
     public function prohibit($permission, $target_type = null, $target_id = null)
     {
-        if (!$this->hasPermission($permission, $target_type, $target_id))
-        {
+        if (!$this->hasPermission($permission, $target_type, $target_id)) {
             $this->allow($permission, $target_type, $target_id);
 
             return $this->prohibit($permission, $target_type, $target_id);
@@ -120,7 +116,7 @@ trait HasPermissions {
     public function unprohibit($permission, $target_type = null, $target_id = null)
     {
         if (!$this->hasPermission($permission, $target_type, $target_id)) {
-                    return $this->allow($permission, $target_type, $target_id);
+            return $this->allow($permission, $target_type, $target_id);
         }
 
         return $this->getPermission($permission, $target_type, $target_id)->update([

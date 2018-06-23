@@ -2,11 +2,10 @@
 
 namespace Rennokki\Guardian\Test;
 
-use Rennokki\Guardian\Test\Models\User;
 use Rennokki\Guardian\Test\Models\Post;
 
-class ModelSpecificTest extends TestCase {
-
+class ModelSpecificTest extends TestCase
+{
     protected $user;
     protected $targetInstance = Post::class;
     protected $targetInstanceId = 777;
@@ -72,7 +71,7 @@ class ModelSpecificTest extends TestCase {
         $this->assertTrue($this->user->cant('edit', $this->targetInstance, 0));
 
         $this->user->disallow('edit', $this->targetInstance, $this->targetInstanceId);
-        
+
         $this->assertEquals($this->user->permissions()->count(), 1);
         $this->assertTrue($this->user->hasPermission('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertEquals($this->user->allowedPermissions()->count(), 0);
@@ -82,7 +81,6 @@ class ModelSpecificTest extends TestCase {
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, 0));
         $this->assertTrue($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cant('edit', $this->targetInstance, 0));
-
     }
 
     public function testProhibition()
@@ -205,6 +203,4 @@ class ModelSpecificTest extends TestCase {
         $this->assertFalse($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertFalse($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
     }
-
-
 }
