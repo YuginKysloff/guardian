@@ -10,35 +10,28 @@
 # Eloquent Guardian
 Eloquent Guardian is your big beast that prevents anyone from accessing restricted content. It is like a bodyGUARD(ian), but it's less harmful.
 
- Also, you don't need to pay, it will work for you for free.
 # Installation
-
 Install the package:
-
 ```bash
 $ composer require rennokki/guardian
 ```
 
 If your Laravel version does not support package discovery, add this line in the `providers` array in your `config/app.php` file:
-
 ```php
 Rennokki\Guardian\GuardianServiceProvider::class,
 ```
 
 Publish the config file & migration files:
-
 ```bash
 $ php artisan vendor:publish
 ```
 
 Migrate the database:
-
 ```bash
 $ php artisan migrate
 ```
 
 Add the `HasPermissions` trait to your Eloquent model:
-
 ```php
 use Rennokki\Guardian\Traits\HasPermissions;
 
@@ -50,28 +43,27 @@ class User extends Model {
 
 You can allow, disallow, prohibit or unprohibit permissions.
 
-Permissions can be:
+There are more permission types. Here are they:
 
-* String Type:
+* String Type. It's just a string, it's not related to any model.
 ```php
 $user->allow('edit-posts');
 $user->can('edit-posts');
 ```
 
-* Global Type:
+* Global Type. It's related to a model, but not to a specific one.
 ```php
 $user->allow('edit', App\Post::class);
 $user->can('edit', App\Post::class);
 ```
 
-* Global Specific Type:
+* Global Specific Type. It's related to a specific model.
 ```php
 $user->allow('edit', App\Post::class, 'post_id_here');
 $user->can('edit', App\Post::class, 'post_id_here');
 ```
 
-Note: The following methods accept 3 parameters, from which the first is mandatory and the following two are optional.
-
+I will get through methods you can use with this package:
 * `hasPermission()`
 * `getPermission()`
 * `can()`
@@ -158,17 +150,15 @@ Route::get('/admin', 'AdminController@ControlPanel')->middleware('guardian:acces
 ```
 
 Or you can use it for a global model:
-
 ```php
 Route::post('/admin/products', 'AdminController@CreateProduct')->middleware('guardian:create,App\Product');
 ```
 
 This middleware accepts a third parameter, so this works even with Global Specific permissions.
 
-This is a little bit complicated, because it involves the **route placeholder** instead of the **model id**.
+This is a little bit complicated, because it involves the **route parameter** instead of the **model ID**.
 
 Let's use an example for this:
-
 ```php
 Route::patch('/admin/{post_id}', 'AdminController@EditPost')->middleware('guardian:edit,App\Post,post_id');
 ```
@@ -177,8 +167,7 @@ The third parameter is the placeholder name, in the request route, where the ID 
 
 For all three types of routes, exceptions will be thrown if there are not enough permissions:
 
-For the simple & global types (the frist two), a `Rennokki\Guardian\Exceptions\PermissionException` will be thrown.
+* `Rennokki\Guardian\Exceptions\PermissionException`, if no permissions.
+* `Rennokki\Guardian\Exceptions\RouteException`, if the passed route parameter is non-existent.
 
-For the last one, a `Rennokki\Guardian\Exceptions\RouteException` is thrown.
-
-You can access `permission()`, `modelType()` and `modelIdPlaceholder()` methods within the exception to handle your exception.
+You can access `permission()`, `modelType()` and `modelIdPlaceholder()` methods within the exception to handle your exception further.
