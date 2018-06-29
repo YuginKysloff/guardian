@@ -6,7 +6,7 @@ trait HasPermissions
 {
     /**
      * Permissions relationship.
-     * 
+     *
      * @return morphMany The relatinship.
      */
     public function permissions()
@@ -15,12 +15,12 @@ trait HasPermissions
     }
 
     /**
-     * Check wether the user called has a permission or not (it doesn't have to be allowed or not, it has to be stored)
-     * 
+     * Check wether the user called has a permission or not (it doesn't have to be allowed or not, it has to be stored).
+     *
      * @param string $permission Permission name or action.
      * @param string $target_type Model name on which the permission is attached to.
      * @param string $target_id Model ID on which the permission is attached to.
-     * @return boolean Wether the permission exists in the database or not.
+     * @return bool Wether the permission exists in the database or not.
      */
     public function hasPermission($permission, $target_type = null, $target_id = null)
     {
@@ -33,7 +33,7 @@ trait HasPermissions
 
     /**
      * Get the permission from the database. Returns null if it does not exist.
-     * 
+     *
      * @param string $permission Permission name or action.
      * @param string $target_type Model name on which the permission is attached to.
      * @param string $target_id Model ID on which the permission is attached to.
@@ -50,7 +50,7 @@ trait HasPermissions
 
     /**
      * Relatinship over allowed permissions.
-     * 
+     *
      * @return morphMany The relatinship.
      */
     public function allowedPermissions()
@@ -60,7 +60,7 @@ trait HasPermissions
 
     /**
      * Relatinship over prohibited permissions.
-     * 
+     *
      * @return morphMany The relatinship.
      */
     public function prohibitedPermissions()
@@ -70,11 +70,11 @@ trait HasPermissions
 
     /**
      * Checks if the binded model has a certain permission.
-     * 
+     *
      * @param string $permission Permission name or action.
      * @param string $target_type Model name on which the permission is attached to.
      * @param string $target_id Model ID on which the permission is attached to.
-     * @return boolean Wether the binded model has a permission.
+     * @return bool Wether the binded model has a permission.
      */
     public function can($permission, $target_type = null, $target_id = null)
     {
@@ -95,11 +95,11 @@ trait HasPermissions
 
     /**
      * Checks if the binded model has NOT a certain permission.
-     * 
+     *
      * @param string $permission Permission name or action.
      * @param string $target_type Model name on which the permission is attached to.
      * @param string $target_id Model ID on which the permission is attached to.
-     * @return boolean Wether the binded model has a permission.
+     * @return bool Wether the binded model has a permission.
      */
     public function cannot($permission, $target_type = null, $target_id = null)
     {
@@ -116,11 +116,11 @@ trait HasPermissions
 
     /**
      * Allows the binded model a certain permission. It is prohibited, it is unprohibited.
-     * 
+     *
      * @param string $permission Permission name or action.
      * @param string $target_type Model name on which the permission is attached to.
      * @param string $target_id Model ID on which the permission is attached to.
-     * @return boolean Wether the binded model has gained the permission or not.
+     * @return bool Wether the binded model has gained the permission or not.
      */
     public function allow($permission, $target_type = null, $target_id = null)
     {
@@ -140,12 +140,12 @@ trait HasPermissions
 
     /**
      * Disallows the binded model a certain permission. If it has not, it is allowed then prohibited.
-     * 
+     *
      * @param string $permission Permission name or action.
      * @param string $target_type Model name on which the permission is attached to.
      * @param string $target_id Model ID on which the permission is attached to.
-     * @param boolean $prohibitInsteadOfDelete Wether it should be prohibited instead of deleted from the database. Defaults to deletion.
-     * @return boolean Wether the binded model got the permission prohibited or a removed.
+     * @param bool $prohibitInsteadOfDelete Wether it should be prohibited instead of deleted from the database. Defaults to deletion.
+     * @return bool Wether the binded model got the permission prohibited or a removed.
      */
     public function disallow($permission, $target_type = null, $target_id = null, $prohibitInsteadOfDelete = false)
     {
@@ -172,11 +172,11 @@ trait HasPermissions
 
     /**
      * Prohibit a certain permission. If it does not exist, it is allowed then prohibited.
-     * 
+     *
      * @param string $permission Permission name or action.
      * @param string $target_type Model name on which the permission is attached to.
      * @param string $target_id Model ID on which the permission is attached to.
-     * @return boolean Wether the binded model got the permission prohibited or not.
+     * @return bool Wether the binded model got the permission prohibited or not.
      */
     public function prohibit($permission, $target_type = null, $target_id = null)
     {
@@ -193,11 +193,11 @@ trait HasPermissions
 
     /**
      * Unprohibit a certain permission. If it does not exist, it is allowed.
-     * 
+     *
      * @param string $permission Permission name or action.
      * @param string $target_type Model name on which the permission is attached to.
      * @param string $target_id Model ID on which the permission is attached to.
-     * @return boolean Wether the binded model got the permission allowed/uprohibited or not.
+     * @return bool Wether the binded model got the permission allowed/uprohibited or not.
      */
     public function unprohibit($permission, $target_type = null, $target_id = null)
     {

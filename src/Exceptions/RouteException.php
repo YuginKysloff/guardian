@@ -12,7 +12,7 @@ class RouteException extends AuthorizationException
 
     /**
      * Create a RouteException instance.
-     * 
+     *
      * @param string $permission Permission name or action.
      * @param string $model_type Model name on which the permission is attached to.
      * @param string $model_id_placeholder Model ID on which the permission is attached to.
@@ -29,7 +29,7 @@ class RouteException extends AuthorizationException
 
     /**
      * Get the permission or action name.
-     * 
+     *
      * @return string Permission or action name.
      */
     public function permission()
@@ -39,7 +39,7 @@ class RouteException extends AuthorizationException
 
     /**
      * Get the placeholder name in the route where the ID will be put.
-     * 
+     *
      * @return string Model ID placeholder name.
      */
     public function modelIdPlaceholder()
@@ -49,7 +49,7 @@ class RouteException extends AuthorizationException
 
     /**
      * Get the Model class name.
-     * 
+     *
      * @return string Model class name.
      */
     public function modelType()

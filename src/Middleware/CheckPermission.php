@@ -10,7 +10,7 @@ class CheckPermission
 {
     /**
      * Middlewares the current route for Guardian permissions.
-     * 
+     *
      * @param Request $request The request.
      * @param Closure $next Closure for passing the request to the next middleware.
      * @param string $permission Permission name or action.
