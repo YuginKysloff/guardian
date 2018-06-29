@@ -130,12 +130,14 @@ trait HasPermissions
 
         $model = config('guardian.model');
 
-        return $this->permissions()->save(new $model([
-                'permission_name' => $permission,
-                'is_prohibited'   => false,
-                'target_type'     => ($target_type) ?: null,
-                'target_id'       => ($target_type && $target_id) ? $target_id : null,
-            ]));
+        $this->permissions()->save(new $model([
+            'permission_name' => $permission,
+            'is_prohibited'   => false,
+            'target_type'     => ($target_type) ?: null,
+            'target_id'       => ($target_type && $target_id) ? $target_id : null,
+        ]));
+
+        return true;
     }
 
     /**
