@@ -6,7 +6,7 @@
 [![Monthly Downloads](https://poser.pugx.org/rennokki/guardian/d/monthly)](https://packagist.org/packages/rennokki/guardian)
 [![License](https://poser.pugx.org/rennokki/guardian/license)](https://packagist.org/packages/rennokki/guardian)
 
-[![Beerpay](https://beerpay.io/rennokki/guardian/badge.svg?style=beer-square)](https://beerpay.io/rennokki/guardian)  [![Beerpay](https://beerpay.io/rennokki/guardian/make-wish.svg?style=flat-square)](https://beerpay.io/rennokki/guardian?focus=wish)
+[![PayPal](https://img.shields.io/badge/PayPal-donate-blue.svg)](https://paypal.me/rennokki)
 
 # Eloquent Guardian
 Eloquent Guardian is your big beast that prevents anyone from accessing restricted content. It is like a bodyGUARD(ian), but it's less harmful.
