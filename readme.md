@@ -171,3 +171,8 @@ For all three types of routes, exceptions will be thrown if there are not enough
 * `Rennokki\Guardian\Exceptions\RouteException`, if the passed route parameter is non-existent.
 
 You can access `permission()`, `modelType()` and `modelIdPlaceholder()` methods within the exception to handle your exception further.
+
+## Support on Beerpay
+Hey dude! Help me out for a couple of :beers:!
+
+[![Beerpay](https://beerpay.io/rennokki/guardian/badge.svg?style=beer-square)](https://beerpay.io/rennokki/guardian)  [![Beerpay](https://beerpay.io/rennokki/guardian/make-wish.svg?style=flat-square)](https://beerpay.io/rennokki/guardian?focus=wish)
