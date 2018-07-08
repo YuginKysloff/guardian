@@ -1,6 +1,6 @@
 {
     "name": "rennokki/guardian",
-    "description": "Your guardian for permissions. Stop those who aren't invited to the party.",
+    "description": "Guardian is a really very simple permissions system for Laravel that also tracks permissions for further usage.",
     "keywords": [
         "eloquent",
         "laravel",
