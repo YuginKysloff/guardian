@@ -1,6 +1,6 @@
 {
     "name": "rennokki/guardian",
-    "description": "Guardian is a really very simple permissions system for Laravel that also tracks permissions for further usage.",
+    "description": "Guardian is a lightweight permissions system for Laravel.",
     "keywords": [
         "eloquent",
         "laravel",
