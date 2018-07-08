@@ -9,7 +9,10 @@
 [![PayPal](https://img.shields.io/badge/PayPal-donate-blue.svg)](https://paypal.me/rennokki)
 
 # Eloquent Guardian
-Eloquent Guardian is your big beast that prevents anyone from accessing restricted content. It is like a bodyGUARD(ian), but it's less harmful.
+Eloquent Guardian is a simple permissions system for your users.
+
+# Why using Guardian?
+It's simple. It suit my needs and the simpler it is, the more easy it gets.
 
 # Installation
 Install the package:
@@ -42,133 +45,98 @@ class User extends Model {
 }
 ```
 
-You can allow, disallow, prohibit or unprohibit permissions.
-
-There are more permission types. Here are they:
-
-* String Type. It's just a string, it's not related to any model.
+# Types of permissions
+* String Type is just a string, it's not related to any model. It is good for permissions that holds accessing abilities or features.
 ```php
-$user->allow('edit-posts');
-$user->can('edit-posts');
+$user->allow('access.dashboard');
 ```
 
-* Global Type. It's related to a model, but not to a specific one.
+* Global Type is related to a model, but not to a specific one. It can control any model with any ID if set.
 ```php
-$user->allow('edit', App\Post::class);
-$user->can('edit', App\Post::class);
+$user->allow('edit', Post::class);
 ```
 
-* Global Specific Type. It's related to a specific model.
+* Global Specific Type is related to a specific model. It cannot control any other model than this specific one.
 ```php
 $user->allow('edit', App\Post::class, 'post_id_here');
-$user->can('edit', App\Post::class, 'post_id_here');
 ```
 
-I will get through methods you can use with this package:
-* `hasPermission()`
-* `getPermission()`
-* `can()`
-* `cannot()`
-* `cant()`
-* `allow()`
-* `disallow()`
-* `deletePermission()`
-* `prohibit()`
-* `unprohibit()`
-
+# Checking
+You can check permissions within the model using `can()`, `cannot()` or `cant()`.
 ```php
-$user = User::find(1);
+$user->can('access.dashboard');
+$user->cannot('sell.products');
+$user->cant('sell.products'); // alias to cannot()
+```
 
-// Relationships.
-$user->permissions(); 
+# Allowing and Unprohibiting permissions
+Allowing or Unprohibiting produces a grant access to that permission.
+```php
+$user->allow('cloning');
+$user->unprohibit('cloning'); // same thing
+```
+
+# Disallowing and Prohibiting permissions
+Disallowing or Prohibiting permissions can be done whenever. The result will always be the same: a denied access.
+```php
+$user->disallow('commenting');
+$user->prohibit('commenting'); // produces the same thing.
+```
+
+# Global Type over Specific Type
+Let's say you have a `Post` class and the user is only allowed to edit or delete only his own posts. Using this way, whenever you check for a Global Type, it will return false, but not if you check for Specific Type.
+```php
+$user->allow('edit', Post::class, 'his_post_id');
+$user->allow('delete', Post::class, 'his_post_id');
+
+$user->can('edit', Post::class); // false
+$user->can('edit', Post::class, 'his_post_id'); // true
+```
+
+Now let's say you have chat rooms. And you want to give an user the permission to see any chat room, but not a specific one.
+```php
+$user->allow('view', ChatRoom::class);
+$user->disallow('view', ChatRoom::class, 'this_id_is_hidden');
+
+$user->can('view', ChatRoom::class); // true
+$user->cannot('view', ChatRoom::class, 'this_id_is_hidden'); // true
+```
+Make sure you check for Specific Types **before** the Global Types. Otherwise, you will give access to a hidden chat room that shouldn't be accessible for that user.
+
+# Relationships
+```php
+$user->permissions();
 $user->allowedPermissions();
 $user->prohibitedPermissions();
-
-// Check if the user can.
-$this->can('edit-articles');
-$this->can('edit', App\Post::class);
-$this->can('edit', App\Post::class, 'post_id_here');
-
-// Check if the user cannot.
-$this->cannot('edit-articles');
-$this->cannot('edit', App\Post::class);
-$this->cannot('edit', App\Post::class, 'post_id_here');
-
-// An alias of the cannot() method.
-$this->cant('edit-articles');
-$this->cant('edit', App\Post::class);
-$this->cant('edit', App\Post::class, 'post_id_here');
-
-// Allow a permission.
-// If there is an active record, it will automatically set its prohibited status to false.
-// If you have prohibited the permission earlier and you then call allow(), then the can() will return true.
-$this->allow('edit-articles');
-$this->allow('edit', App\Post::class);
-$this->allow('edit', App\Post::class, 'post_id_here');
-
-// If you allow a permission on a global one.
-$this->allow('edit', App\Post::class);
-
-// When you will check against any id of the class, you will get true.
-$this->can('edit', App\Post::class, 'post_id_here'); // true
-
-// Disallow a permission. This will delete the permission.
-// Use prohibit() to keep it but to not delete it.
-// If the user does not have an active record of the permission, it will create the permission with is_prohibited to 1 and return it.
-$this->disallow('edit-articles');
-$this->disallow('edit', App\Post::class);
-$this->disallow('edit', App\Post::class, 'post_id_here');
-
-// This is an alias of the disallow() method.
-$this->deletePermission('edit-articles');
-$this->deletePermission('edit', App\Post::class);
-$this->deletePermission('edit', App\Post::class, 'post_id_here');
-
-// Use prohibit/unprohibit to keep it but not delete the record.
-// Note: If the user does not have an active record of the permission, it will create one with is_prohibited to 1 and reurn it.
-$this->prohibit('edit-articles');
-$this->prohibit('edit', App\Post::class);
-$this->prohibit('edit', App\Post::class, 'post_id_here');
-$this->unprohibit('edit-articles');
-$this->unprohibit('edit', App\Post::class);
-$this->unprohibit('edit', App\Post::class, 'post_id_here');
 ```
 
 # Middleware
-You can use the methods within the model as-is, or you can use a middleware.
-
-For this, you should add the middleware to your `$routeMiddleware` array from `app\Http\Kernel.php`
+You can use the methods within the model as-is, or you can use a middleware to filter permissions. For this, you should add the middleware to your `$routeMiddleware` array from `app\Http\Kernel.php`
 
 ```php
 'guardian' => \Rennokki\Guardian\Middleware\CheckPermission::class,
 ```
 
-After this, you can use it in your routes to filter the bad bugs :)
+After this, you can use it in your routes to filter permissions automatically and throw specific exceptions when something occurs.
 
-You can use it with simple permissions:
+* String Middleware
 ```php
-Route::get('/admin', 'AdminController@ControlPanel')->middleware('guardian:access-admin-panel');
+Route::get('/admin', 'AdminController@ControlPanel')->middleware('guardian:access.adashboard');
 ```
 
-Or you can use it for a global model:
+* Global Type
 ```php
 Route::post('/admin/products', 'AdminController@CreateProduct')->middleware('guardian:create,App\Product');
 ```
 
-This middleware accepts a third parameter, so this works even with Global Specific permissions.
-
-This is a little bit complicated, because it involves the **route parameter** instead of the **model ID**.
-
-Let's use an example for this:
+* Global Specific Type
 ```php
 Route::patch('/admin/{post_id}', 'AdminController@EditPost')->middleware('guardian:edit,App\Post,post_id');
 ```
 
-The third parameter is the placeholder name, in the request route, where the ID of the model will be placed.
+##### Note: Instead of putting a specific Post ID, you have just to indicate where the ID of that model will be placed in the route URL. 
 
-For all three types of routes, exceptions will be thrown if there are not enough permissions:
-
-* `Rennokki\Guardian\Exceptions\PermissionException`, if no permissions.
+* `Rennokki\Guardian\Exceptions\PermissionException`, if the authenticated user doesn't have permissions.
 * `Rennokki\Guardian\Exceptions\RouteException`, if the passed route parameter is non-existent.
 
-You can access `permission()`, `modelType()` and `modelIdPlaceholder()` methods within the exception to handle your exception further.
+You can access `permission()`, `modelType()` and `modelIdPlaceholder()` methods within the exception to handle your exception further, at this point.
