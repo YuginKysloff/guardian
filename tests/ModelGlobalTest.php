@@ -41,7 +41,7 @@ class ModelGlobalTest extends TestCase
         $this->assertFalse($this->user->cannot('edit', $this->targetInstance));
         $this->assertFalse($this->user->cant('edit', $this->targetInstance));
 
-        $this->user->disallow('edit', $this->targetInstance, null, true); // prohibit instead of delete
+        $this->user->disallow('edit', $this->targetInstance, null);
 
         $this->assertEquals($this->user->permissions()->count(), 1);
         $this->assertTrue($this->user->hasPermission('edit', $this->targetInstance));
@@ -52,12 +52,12 @@ class ModelGlobalTest extends TestCase
         $this->assertTrue($this->user->cant('edit', $this->targetInstance));
 
         $this->user->allow('edit', $this->targetInstance);
-        $this->user->disallow('edit', $this->targetInstance); // delete
+        $this->user->disallow('edit', $this->targetInstance);
 
-        $this->assertEquals($this->user->permissions()->count(), 0);
-        $this->assertFalse($this->user->hasPermission('edit', $this->targetInstance));
+        $this->assertEquals($this->user->permissions()->count(), 1);
+        $this->assertTrue($this->user->hasPermission('edit', $this->targetInstance));
         $this->assertEquals($this->user->allowedPermissions()->count(), 0);
-        $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
+        $this->assertEquals($this->user->prohibitedPermissions()->count(), 1);
         $this->assertFalse($this->user->can('edit', $this->targetInstance));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance));
         $this->assertTrue($this->user->cant('edit', $this->targetInstance));

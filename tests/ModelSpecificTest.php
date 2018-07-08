@@ -45,7 +45,7 @@ class ModelSpecificTest extends TestCase
         $this->assertFalse($this->user->cant('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cant('edit', $this->targetInstance, 0));
 
-        $this->user->disallow('edit', $this->targetInstance, $this->targetInstanceId, true); // prohibit instead of delete
+        $this->user->disallow('edit', $this->targetInstance, $this->targetInstanceId);
 
         $this->assertEquals($this->user->permissions()->count(), 1);
         $this->assertTrue($this->user->hasPermission('edit', $this->targetInstance, $this->targetInstanceId));
@@ -58,12 +58,12 @@ class ModelSpecificTest extends TestCase
         $this->assertTrue($this->user->cant('edit', $this->targetInstance, 0));
 
         $this->user->allow('edit', $this->targetInstance, $this->targetInstanceId);
-        $this->user->disallow('edit', $this->targetInstance, $this->targetInstanceId); // delete
+        $this->user->disallow('edit', $this->targetInstance, $this->targetInstanceId);
 
-        $this->assertEquals($this->user->permissions()->count(), 0);
-        $this->assertFalse($this->user->hasPermission('edit', $this->targetInstance, $this->targetInstanceId));
+        $this->assertEquals($this->user->permissions()->count(), 1);
+        $this->assertTrue($this->user->hasPermission('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertEquals($this->user->allowedPermissions()->count(), 0);
-        $this->assertEquals($this->user->prohibitedPermissions()->count(), 0);
+        $this->assertEquals($this->user->prohibitedPermissions()->count(), 1);
         $this->assertFalse($this->user->can('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, $this->targetInstanceId));
         $this->assertTrue($this->user->cannot('edit', $this->targetInstance, 0));

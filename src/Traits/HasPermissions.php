@@ -146,10 +146,9 @@ trait HasPermissions
      * @param string $permission Permission name or action.
      * @param string $target_type Model name on which the permission is attached to.
      * @param string $target_id Model ID on which the permission is attached to.
-     * @param bool $prohibitInsteadOfDelete Wether it should be prohibited instead of deleted from the database. Defaults to deletion.
      * @return bool Wether the binded model got the permission prohibited or a removed.
      */
-    public function disallow($permission, $target_type = null, $target_id = null, $prohibitInsteadOfDelete = false)
+    public function disallow($permission, $target_type = null, $target_id = null)
     {
         if (! $this->hasPermission($permission, $target_type, $target_id)) {
             $this->allow($permission, $target_type, $target_id);
@@ -157,15 +156,11 @@ trait HasPermissions
             return $this->prohibit($permission, $target_type, $target_id);
         }
 
-        if ($prohibitInsteadOfDelete) {
-            return $this->prohibit($permission, $target_type, $target_id);
-        }
-
-        return (bool) $this->permissions()->where('permission_name', $permission)->delete();
+        return $this->prohibit($permission, $target_type, $target_id);
     }
 
     /**
-     * Alias to the disallow() method with $prohibitInsteadOfDelete set to true.
+     * Alias to the disallow().
      */
     public function deletePermission($permission, $target_type = null, $target_id = null)
     {
