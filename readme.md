@@ -12,7 +12,7 @@
 Eloquent Guardian is a simple permissions system for your users.
 
 # Why using Guardian?
-It's simple. It suit my needs and the simpler it is, the more easy it gets.
+It's simple. It has to be simple. Don't bother using gates or anything of that complicate stuff. You can store permissions, you can track them and you can check your users when you need to: either it's from the model or within a middleware.
 
 # Installation
 Install the package:
@@ -134,7 +134,7 @@ Route::post('/admin/products', 'AdminController@CreateProduct')->middleware('gua
 Route::patch('/admin/{post_id}', 'AdminController@EditPost')->middleware('guardian:edit,App\Post,post_id');
 ```
 
-##### Note: Instead of putting a specific Post ID, you have just to indicate where the ID of that model will be placed in the route URL. 
+**Note: Instead of putting a specific Post ID, you have just to indicate where the ID of that model will be placed in the route URL.**
 
 * `Rennokki\Guardian\Exceptions\PermissionException`, if the authenticated user doesn't have permissions.
 * `Rennokki\Guardian\Exceptions\RouteException`, if the passed route parameter is non-existent.
