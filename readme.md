@@ -9,7 +9,7 @@
 [![PayPal](https://img.shields.io/badge/PayPal-donate-blue.svg)](https://paypal.me/rennokki)
 
 # Eloquent Guardian
-Eloquent Guardian is a simple permissions system for your users. While there are many, this one solves everything in the most eloquent way.
+Eloquent Guardian is a simple permissions system for your users. While there are many other packages for permissions, this one solves everything in the most eloquent way.
 
 # Installation
 Install the package:
