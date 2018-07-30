@@ -17,34 +17,34 @@ trait HasPermissions
     /**
      * Check wether the user called has a permission or not (it doesn't have to be allowed or not, it has to be stored).
      *
-     * @param string $permission Permission name or action.
-     * @param string $target_type Model name on which the permission is attached to.
-     * @param string $target_id Model ID on which the permission is attached to.
+     * @param $permission Permission name or action.
+     * @param string $targetType Model name on which the permission is attached to.
+     * @param string $targetId Model ID on which the permission is attached to.
      * @return bool Wether the permission exists in the database or not.
      */
-    public function hasPermission($permission, $target_type = null, $target_id = null)
+    public function hasPermission($permission, $targetType = null, $targetId = null)
     {
         return (bool) ($this->permissions()
             ->where('permission_name', $permission)
-            ->where('target_type', $target_type)
-            ->where('target_id', $target_id)
+            ->where('target_type', $targetType)
+            ->where('target_id', $targetId)
             ->count() == 1);
     }
 
     /**
      * Get the permission from the database. Returns null if it does not exist.
      *
-     * @param string $permission Permission name or action.
-     * @param string $target_type Model name on which the permission is attached to.
-     * @param string $target_id Model ID on which the permission is attached to.
+     * @param $permission Permission name or action.
+     * @param string $targetType Model name on which the permission is attached to.
+     * @param string $targetId Model ID on which the permission is attached to.
      * @return PermissionModel The Permission model.
      */
-    public function getPermission($permission, $target_type = null, $target_id = null)
+    public function getPermission($permission, $targetType = null, $targetId = null)
     {
         return $this->permissions()
             ->where('permission_name', $permission)
-            ->where('target_type', $target_type)
-            ->where('target_id', $target_id)
+            ->where('target_type', $targetType)
+            ->where('target_id', $targetId)
             ->first();
     }
 
@@ -71,16 +71,16 @@ trait HasPermissions
     /**
      * Checks if the binded model has a certain permission.
      *
-     * @param string $permission Permission name or action.
-     * @param string $target_type Model name on which the permission is attached to.
-     * @param string $target_id Model ID on which the permission is attached to.
+     * @param $permission Permission name or action.
+     * @param string $targetType Model name on which the permission is attached to.
+     * @param string $targetId Model ID on which the permission is attached to.
      * @return bool Wether the binded model has a permission.
      */
-    public function can($permission, $target_type = null, $target_id = null)
+    public function can($permission, $targetType = null, $targetId = null)
     {
-        if (! $this->hasPermission($permission, $target_type, $target_id)) {
-            if ($this->hasPermission($permission, $target_type)) {
-                $permission = $this->getPermission($permission, $target_type);
+        if (! $this->hasPermission($permission, $targetType, $targetId)) {
+            if ($this->hasPermission($permission, $targetType)) {
+                $permission = $this->getPermission($permission, $targetType);
 
                 return (bool) ! $this->is_prohibited;
             }
@@ -88,7 +88,7 @@ trait HasPermissions
             return false;
         }
 
-        $permission = $this->getPermission($permission, $target_type, $target_id);
+        $permission = $this->getPermission($permission, $targetType, $targetId);
 
         return ! $permission->is_prohibited;
     }
@@ -96,36 +96,36 @@ trait HasPermissions
     /**
      * Checks if the binded model has NOT a certain permission.
      *
-     * @param string $permission Permission name or action.
-     * @param string $target_type Model name on which the permission is attached to.
-     * @param string $target_id Model ID on which the permission is attached to.
+     * @param $permission Permission name or action.
+     * @param string $targetType Model name on which the permission is attached to.
+     * @param string $targetId Model ID on which the permission is attached to.
      * @return bool Wether the binded model has a permission.
      */
-    public function cannot($permission, $target_type = null, $target_id = null)
+    public function cannot($permission, $targetType = null, $targetId = null)
     {
-        return (bool) ! $this->can($permission, $target_type, $target_id);
+        return (bool) ! $this->can($permission, $targetType, $targetId);
     }
 
     /**
      * Alias to the cannot() method.
      */
-    public function cant($permission, $target_type = null, $target_id = null)
+    public function cant($permission, $targetType = null, $targetId = null)
     {
-        return (bool) $this->cannot($permission, $target_type, $target_id);
+        return (bool) $this->cannot($permission, $targetType, $targetId);
     }
 
     /**
      * Allows the binded model a certain permission. It is prohibited, it is unprohibited.
      *
-     * @param string $permission Permission name or action.
-     * @param string $target_type Model name on which the permission is attached to.
-     * @param string $target_id Model ID on which the permission is attached to.
+     * @param $permission Permission name or action.
+     * @param string $targetType Model name on which the permission is attached to.
+     * @param string $targetId Model ID on which the permission is attached to.
      * @return bool Wether the binded model has gained the permission or not.
      */
-    public function allow($permission, $target_type = null, $target_id = null)
+    public function allow($permission, $targetType = null, $targetId = null)
     {
-        if ($this->hasPermission($permission, $target_type, $target_id)) {
-            return $this->unprohibit($permission, $target_type, $target_id);
+        if ($this->hasPermission($permission, $targetType, $targetId)) {
+            return $this->unprohibit($permission, $targetType, $targetId);
         }
 
         $model = config('guardian.model');
@@ -133,8 +133,8 @@ trait HasPermissions
         $this->permissions()->save(new $model([
             'permission_name' => $permission,
             'is_prohibited'   => false,
-            'target_type'     => ($target_type) ?: null,
-            'target_id'       => ($target_type && $target_id) ? $target_id : null,
+            'target_type'     => ($targetType) ?: null,
+            'target_id'       => ($targetType && $targetId) ? $targetId : null,
         ]));
 
         return true;
@@ -143,47 +143,47 @@ trait HasPermissions
     /**
      * Disallows the binded model a certain permission. If it has not, it is allowed then prohibited.
      *
-     * @param string $permission Permission name or action.
-     * @param string $target_type Model name on which the permission is attached to.
-     * @param string $target_id Model ID on which the permission is attached to.
+     * @param $permission Permission name or action.
+     * @param string $targetType Model name on which the permission is attached to.
+     * @param string $targetId Model ID on which the permission is attached to.
      * @return bool Wether the binded model got the permission prohibited or a removed.
      */
-    public function disallow($permission, $target_type = null, $target_id = null)
+    public function disallow($permission, $targetType = null, $targetId = null)
     {
-        if (! $this->hasPermission($permission, $target_type, $target_id)) {
-            $this->allow($permission, $target_type, $target_id);
+        if (! $this->hasPermission($permission, $targetType, $targetId)) {
+            $this->allow($permission, $targetType, $targetId);
 
-            return $this->prohibit($permission, $target_type, $target_id);
+            return $this->prohibit($permission, $targetType, $targetId);
         }
 
-        return $this->prohibit($permission, $target_type, $target_id);
+        return $this->prohibit($permission, $targetType, $targetId);
     }
 
     /**
      * Alias to the disallow().
      */
-    public function deletePermission($permission, $target_type = null, $target_id = null)
+    public function deletePermission($permission, $targetType = null, $targetId = null)
     {
-        return $this->disallow($permission, $target_type, $target_id);
+        return $this->disallow($permission, $targetType, $targetId);
     }
 
     /**
      * Prohibit a certain permission. If it does not exist, it is allowed then prohibited.
      *
-     * @param string $permission Permission name or action.
-     * @param string $target_type Model name on which the permission is attached to.
-     * @param string $target_id Model ID on which the permission is attached to.
+     * @param $permission Permission name or action.
+     * @param string $targetType Model name on which the permission is attached to.
+     * @param string $targetId Model ID on which the permission is attached to.
      * @return bool Wether the binded model got the permission prohibited or not.
      */
-    public function prohibit($permission, $target_type = null, $target_id = null)
+    public function prohibit($permission, $targetType = null, $targetId = null)
     {
-        if (! $this->hasPermission($permission, $target_type, $target_id)) {
-            $this->allow($permission, $target_type, $target_id);
+        if (! $this->hasPermission($permission, $targetType, $targetId)) {
+            $this->allow($permission, $targetType, $targetId);
 
-            return $this->prohibit($permission, $target_type, $target_id);
+            return $this->prohibit($permission, $targetType, $targetId);
         }
 
-        return $this->getPermission($permission, $target_type, $target_id)->update([
+        return $this->getPermission($permission, $targetType, $targetId)->update([
             'is_prohibited' => true,
         ]);
     }
@@ -191,18 +191,18 @@ trait HasPermissions
     /**
      * Unprohibit a certain permission. If it does not exist, it is allowed.
      *
-     * @param string $permission Permission name or action.
-     * @param string $target_type Model name on which the permission is attached to.
-     * @param string $target_id Model ID on which the permission is attached to.
+     * @param $permission Permission name or action.
+     * @param string $targetType Model name on which the permission is attached to.
+     * @param string $targetId Model ID on which the permission is attached to.
      * @return bool Wether the binded model got the permission allowed/uprohibited or not.
      */
-    public function unprohibit($permission, $target_type = null, $target_id = null)
+    public function unprohibit($permission, $targetType = null, $targetId = null)
     {
-        if (! $this->hasPermission($permission, $target_type, $target_id)) {
-            return $this->allow($permission, $target_type, $target_id);
+        if (! $this->hasPermission($permission, $targetType, $targetId)) {
+            return $this->allow($permission, $targetType, $targetId);
         }
 
-        return $this->getPermission($permission, $target_type, $target_id)->update([
+        return $this->getPermission($permission, $targetType, $targetId)->update([
             'is_prohibited' => false,
         ]);
     }

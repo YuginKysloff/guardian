@@ -7,34 +7,34 @@ use Illuminate\Auth\Access\AuthorizationException;
 class PermissionException extends AuthorizationException
 {
     protected $permission;
-    protected $model_type;
-    protected $model_id_placeholder;
+    protected $modelType;
+    protected $modelIdPlaceholder;
 
     /**
      * Create a PermissionException instance.
      *
-     * @param string $permission Permission name or action.
-     * @param string $model_type Model name on which the permission is attached to.
-     * @param string $model_id_placeholder Model ID on which the permission is attached to.
+     * @param $permission Permission name or action.
+     * @param string $modelType Model name on which the permission is attached to.
+     * @param string $modelIdPlaceholder Model ID on which the permission is attached to.
      * @return void
      */
-    public function __construct($permission, $model_type = null, $model_id_placeholder = null)
+    public function __construct($permission, $modelType = null, $modelIdPlaceholder = null)
     {
         $message = 'Not enough permissions.';
 
-        if ($model_type && ! $model_id_placeholder) {
-            $message = 'Not enough permissions on '.$model_type;
+        if ($modelType && ! $modelIdPlaceholder) {
+            $message = 'Not enough permissions on '.$modelType;
         }
 
-        if ($model_type && $model_id_placeholder) {
-            $message = 'Not enough permissions on '.$model_type.' with ID passed in '.$model_id_placeholder;
+        if ($modelType && $modelIdPlaceholder) {
+            $message = 'Not enough permissions on '.$modelType.' with ID passed in '.$modelIdPlaceholder;
         }
 
         parent::__construct($message);
 
         $this->permission = $permission;
-        $this->model_type = $model_type;
-        $this->model_id_placeholder = $model_id_placeholder;
+        $this->model_type = $modelType;
+        $this->model_id_placeholder = $modelIdPlaceholder;
     }
 
     /**

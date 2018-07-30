@@ -7,24 +7,24 @@ use Illuminate\Auth\Access\AuthorizationException;
 class RouteException extends AuthorizationException
 {
     protected $permission;
-    protected $model_type;
-    protected $model_id_placeholder;
+    protected $modelType;
+    protected $modelIdPlaceholder;
 
     /**
      * Create a RouteException instance.
      *
-     * @param string $permission Permission name or action.
-     * @param string $model_type Model name on which the permission is attached to.
-     * @param string $model_id_placeholder Model ID on which the permission is attached to.
+     * @param $permission Permission name or action.
+     * @param string $modelType Model name on which the permission is attached to.
+     * @param string $modelIdPlaceholder Model ID on which the permission is attached to.
      * @return void
      */
-    public function __construct($permission, $model_type, $model_id_placeholder)
+    public function __construct($permission, $modelType, $modelIdPlaceholder)
     {
         $this->permission = $permission;
-        $this->model_type = $model_type;
-        $this->model_id_placeholder = $model_id_placeholder;
+        $this->model_type = $modelType;
+        $this->model_id_placeholder = $modelIdPlaceholder;
 
-        parent::__construct('The parameter '.$model_id_placeholder.' passed to the Guardian middleware does not exist in the route.');
+        parent::__construct('The parameter '.$modelIdPlaceholder.' passed to the Guardian middleware does not exist in the route.');
     }
 
     /**

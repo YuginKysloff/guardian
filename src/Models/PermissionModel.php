@@ -13,6 +13,9 @@ class PermissionModel extends Model
         'permission_name',
         'is_prohibited',
     ];
+    protected $casts = [
+        'is_prohibited' => 'bool',
+    ];
 
     public function model()
     {
