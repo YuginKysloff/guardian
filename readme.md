@@ -67,7 +67,7 @@ $user->cant('sell.products'); // alias to cannot()
 ```
 
 If your user has a permission for an action on a model, it will have access to any model passed with any ID.
-``php
+```php
 $user->allow('view', \App\Flight::class);
 $user->can('view', \App\Flight::class, 1); // true, can view flight with ID 1
 ```
@@ -114,7 +114,7 @@ You can use it in your routes to filter permissions automatically and throw spec
 
 * String Middleware
 ```php
-Route::get('/admin', 'AdminController@ControlPanel')->middleware('guardian:access.adashboard');
+Route::get('/admin', 'AdminController@ControlPanel')->middleware('guardian:access.dashboard');
 ```
 * Global Type
 ```php
